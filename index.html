@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Nana & Tata ❤️</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+
+    <style>
+        /* =====================
+           RESET & GLOBAL
+        ===================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fdeff2, #f9c5d1);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            color: #8b0035;
+        }
+
+        section {
+            padding: 3rem 1.5rem;
+            max-width: 1100px;
+            margin: auto;
+            text-align: center;
+        }
+
+        /* =====================
+           HERO
+        ===================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            max-width: 650px;
+        }
+
+        /* =====================
+           MESSAGE CARD
+        ===================== */
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .card p {
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        /* =====================
+           COLLAPSIBLE MESSAGE CARD
+        ===================== */
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .card .card-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(.2,.9,.2,1), opacity 0.45s ease, transform 0.45s ease;
+            opacity: 0;
+            transform: translateY(-6px);
+        }
+
+        .card.open .card-body {
+            max-height: 800px; /* large enough for content */
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chev {
+            font-size: 1.2rem;
+            color: #8b0035;
+            transition: transform 0.45s ease;
+        }
+
+        .card.open .chev {
+            transform: rotate(180deg);
+        }
+
+        /* Memories section removed per request */
+
+        /* =====================
+           GALLERY
+        ===================== */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .gallery figure {
+            background: rgba(12, 197, 234, 0.9);
+            padding: 0.6rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.25s ease;
+        }
+
+        .gallery img:focus,
+        .gallery img:hover {
+            transform: scale(1.03);
+            outline: 3px solid rgba(139,0,53,0.12);
+        }
+
+        /* =====================
+           LIGHTBOX / MODAL
+        ===================== */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.7);
+            z-index: 1200;
+            padding: 2rem;
+        }
+
+        .lightbox.open {
+            display: flex;
+        }
+
+        .lightbox-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0;
+            background: transparent; /* remove white frame */
+            box-shadow: none;
+            border-radius: 0;
+            max-width: 95vw;
+        }
+
+        .lightbox-img {
+            max-width: 95vw;
+            max-height: 85vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            background: transparent; /* remove black behind image */
+            display: block;
+        }
+
+        .lightbox-caption {
+            color: #fff; /* caption appears over dark overlay */
+            text-align: center;
+            font-size: 1rem;
+            padding: 0.2rem 0.6rem 1rem 0.6rem;
+            background: transparent;
+        }
+
+        .lightbox-close {
+            position: fixed; /* keep close button at viewport corner */
+            top: 18px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            font-size: 1.2rem;
+            padding: 0.45rem 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+            z-index: 1300;
+        }
+
+        .gallery figcaption {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        /* =====================
+           SURPRISE BUTTON
+        ===================== */
+        .btn {
+            background: #8b0035;
+            color: #fff;
+            border: none;
+            padding: 1rem 2.2rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #6d002a;
+            transform: scale(1.05);
+        }
+
+        .hidden-message {
+            display: none;
+            margin-top: 1.5rem;
+            font-size: 1.2rem;
+            color: #8b0035;
+        }
+
+        /* =====================
+           FLOATING HEARTS
+        ===================== */
+        .heart {
+            position: fixed;
+            bottom: -30px;
+            font-size: 1.4rem;
+            opacity: 0.6;
+            animation: rise 7s linear infinite;
+        }
+
+        @keyframes rise {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-120vh);
+                opacity: 0;
+            }
+        }
+
+        /* =====================
+           RESPONSIVE
+        ===================== */
+        @media (max-width: 600px) {
+            .card {
+                padding: 1.8rem;
+            }
+
+            section {
+                padding: 2rem 1rem;
+            }
+        }
+
+        /* =====================
+           MUSIC CONTROL
+        ===================== */
+        .music-control {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            z-index: 1400;
+            background: rgba(7, 199, 233, 0.95);
+            border: 1px solid rgba(139,0,53,0.12);
+            color: #8b0035;
+            padding: 0.6rem 0.8rem;
+            border-radius: 999px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
+
+        .music-control:focus {
+            outline: 3px solid rgba(139,0,53,0.14);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <h1>Happy Valentine’s Day Nana & Tata ❤️</h1>
+        <p>
+            Celebrating the love that started it all the beautiful partnership
+            of my Nana and Tata.
+        </p>
+    </section>
+
+    <!-- MESSAGE -->
+    <section>
+        <div class="card collapsed" id="messageCard" role="region" aria-labelledby="cardHeader" aria-expanded="false">
+            <div class="card-header" id="cardHeader" tabindex="0" onclick="toggleCard()" onkeypress="if(event.key==='Enter'||event.key===' ') toggleCard();">
+                <h2>A Message From Your Handsome Son <br> -EARL 💕</h2>
+                <div class="chev" aria-hidden="true">▾</div>
+            </div>
+            <div class="card-body">
+                <p>
+                    Dear Nana and Tata,<br><br>
+                    HAPPY VALENTINE'S DAY. I am grateful for your unwavering love, support, and comfort; your generosity, selflessness, and kind guidance made me
+                    into the person I am today. Your love teaches me the true meaning of faith, patience, and family, and I am so grateful for every lesson, every
+                    laugh, and every tender embrace. And also thank you for being such an amazing role model and for all the memories we've shared together. 
+                    Thank you for all your sacrifices and endless love NANA and TATA, even though I'm a hardheaded son but your patience and understanding is always 
+                    xtheir Thank you very much for all you've done to us. I hope that today serves as a reminder of how much you are loved and valued, not just today, but always.<br><br>
+                    I LOVE YOUU BOTH!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAMILY GALLERY -->
+    <section>
+        <h2>OUR FAMILY PICTURES</h2>
+        <div class="gallery">
+            <figure>
+                <img src="pictures/pic1.jpg" alt="Picture 1" tabindex="0" data-caption="Family Pic 1">
+                <figcaption>Family Pic 1</figcaption>
+            </figure>
+            <figure>
+                <img src="pictures/pic2.jpg" alt="Picture 2" tabindex="0" data-caption="Family Pic 2">
+                <figcaption>Family Pic 2</figcaption>
+            </figure>
+            <figure>
+                <img src="pictures/pic3.jpg" alt="Picture 3" tabindex="0" data-caption="Family Pic 3">
+                <figcaption>Family Pic 3</figcaption>
+            </figure>
+            <figure>
+                <img src="pictures/pic4.jpg" alt="Picture 4" tabindex="0" data-caption="Family Pic 4">
+                <figcaption>Family Pic 4</figcaption>
+            </figure>
+            <figure>
+                <img src="pictures/pic5.jpg" alt="Picture 5" tabindex="0" data-caption="Family Pic 5">
+                <figcaption>Family Pic 5</figcaption>
+            </figure>
+            <figure>
+                <img src="pictures/pic6.jpg" alt="Picture 6" tabindex="0" data-caption="Family Pic 6">
+                <figcaption>Family Pic 6</figcaption>
+            </figure>
+            <figure>
+                <img src="pictures/pic7.jpg" alt="Picture 7" tabindex="0" data-caption="Family Pic 7">
+                <figcaption>Family Pic 7</figcaption>
+            </figure>
+            <figure>
+                <img src="pictures/pic8.jpg" alt="Picture 8" tabindex="0" data-caption="Family Pic 8">
+                <figcaption>Family Pic 8</figcaption>
+            </figure>
+            <figure>
+                <img src="pictures/pic9.jpg" alt="Picture 9" tabindex="0" data-caption="Family Pic 9">
+                <figcaption>Family Pic 9</figcaption>
+            </figure>
+            <figure>
+                <img src="pictures/pic10.jpg" alt="Picture 10" tabindex="0" data-caption="Family Pic 10">
+                <figcaption>Family Pic 10</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- LIGHTBOX MARKUP -->
+    <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="lightbox-content" role="document">
+            <button class="lightbox-close" id="lightboxClose" aria-label="Close image">✕</button>
+            <img id="lightboxImg" class="lightbox-img" src="" alt="">
+            <div id="lightboxCaption" class="lightbox-caption"></div>
+        </div>
+    </div>
+    <!-- BACKGROUND MUSIC -->
+    <!-- "Nothing's Gonna Change My Love For You" - Saxophone Cover by Christian Ama -->
+    <audio id="bgMusic" src="https://archive.org/download/nothings-gonna-change-my-love-for-you-george-benson-christian-ama-saxophone-cover_202601/Nothing%27s%20Gonna%20Change%20My%20Love%20For%20You%20George%20Benson%20%28Christian%20Ama%20Saxophone%20Cover%29.mp3" loop preload="auto"></audio>
+    <button id="musicToggle" class="music-control" aria-pressed="false" aria-label="Play background music">♪</button>
+    <section>
+        <button class="btn" onclick="revealMessage()">Tap for a Special Note 💐</button>
+        <div class="hidden-message" id="specialMessage">
+            May your love continue to inspire us all, and thank you for the unconditional LOVE. <br><br>
+            Happy Valentine’s Day, Nana & Tata ❤️<br><br>
+            With all my love,<br>
+            -Earl
+        </div>
+    </section>
+
+    <script>
+        // Toggle the message card open/closed
+        function toggleCard() {
+            const card = document.getElementById('messageCard');
+            const isOpen = card.classList.toggle('open');
+            card.classList.toggle('collapsed', !isOpen);
+            card.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        }
+
+        function revealMessage() {
+            document.getElementById("specialMessage").style.display = "block";
+        }
+
+        // LIGHTBOX / IMAGE VIEWER
+        (function(){
+            const lightbox = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightboxImg');
+            const lbCaption = document.getElementById('lightboxCaption');
+            const lbClose = document.getElementById('lightboxClose');
+            let lastFocused = null;
+
+            function openLightbox(src, alt, caption) {
+                lastFocused = document.activeElement;
+                lbImg.src = src;
+                lbImg.alt = alt || '';
+                lbCaption.textContent = caption || '';
+                lightbox.classList.add('open');
+                lightbox.setAttribute('aria-hidden', 'false');
+                lbClose.focus();
+                document.addEventListener('keydown', onKeyDown);
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('open');
+                lightbox.setAttribute('aria-hidden', 'true');
+                lbImg.src = '';
+                lbCaption.textContent = '';
+                document.removeEventListener('keydown', onKeyDown);
+                if (lastFocused) lastFocused.focus();
+            }
+
+            function onKeyDown(e) {
+                if (e.key === 'Escape') closeLightbox();
+            }
+
+            // click handlers on gallery images
+            document.querySelectorAll('.gallery img').forEach(img => {
+                img.addEventListener('click', () => openLightbox(img.src, img.alt, img.dataset.caption));
+                img.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openLightbox(img.src, img.alt, img.dataset.caption);
+                    }
+                });
+            });
+
+            // close interactions
+            lbClose.addEventListener('click', closeLightbox);
+            lbClose.addEventListener('keydown', (e) => { if (e.key==='Enter' || e.key===' ') closeLightbox(); });
+            lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+        })();
+
+        // BACKGROUND MUSIC TOGGLE
+        (function(){
+            const audio = document.getElementById('bgMusic');
+            const btn = document.getElementById('musicToggle');
+            let isPlaying = false;
+
+            // set a comfortable default volume
+            try { audio.volume = 0.25; } catch(e) {}
+
+            function updateButton() {
+                btn.textContent = isPlaying ? '❚❚' : '♪';
+                btn.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
+            }
+
+            async function playAudio() {
+                try {
+                    await audio.play();
+                    isPlaying = true;
+                    updateButton();
+                } catch (err) {
+                    // Autoplay blocked; user needs to interact. Keep button available.
+                    isPlaying = false;
+                    updateButton();
+                }
+            }
+
+            function pauseAudio() {
+                audio.pause();
+                isPlaying = false;
+                updateButton();
+            }
+
+            btn.addEventListener('click', () => {
+                if (!isPlaying) playAudio(); else pauseAudio();
+            });
+
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    if (!isPlaying) playAudio(); else pauseAudio();
+                }
+            });
+
+            // Try resume after any user interaction (useful if autoplay was blocked)
+            function resumeOnInteraction() {
+                if (!isPlaying) {
+                    // don't force play, just attempt once so browser may allow it
+                    playAudio();
+                }
+                window.removeEventListener('click', resumeOnInteraction);
+                window.removeEventListener('keydown', resumeOnInteraction);
+            }
+
+            window.addEventListener('click', resumeOnInteraction, { once: true });
+            window.addEventListener('keydown', resumeOnInteraction, { once: true });
+
+            // initialize button state
+            updateButton();
+        })();
+
+        // Floating hearts animation
+        setInterval(() => {
+            const heart = document.createElement("div");
+            heart.className = "heart";
+            heart.innerHTML = "❤️";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (5 + Math.random() * 4) + "s";
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 8000);
+        }, 900);
+    </script>
+
+</body>
+</html>
